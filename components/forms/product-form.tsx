@@ -1,11 +1,10 @@
-
 "use client";
+import { Field, FieldLabel, FieldError } from "@/components/ui/field";
 import {
-  Field,
-  FieldLabel,
-  FieldError,
-} from "@/components/ui/field";
-import { InputGroup, InputGroupLabel, InputGroupContent, InputGroupError
+  InputGroup,
+  InputGroupLabel,
+  InputGroupContent,
+  InputGroupError,
 } from "@/components/ui/input-group";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -21,23 +20,28 @@ import {
 } from "@/components/ui/select";
 
 import { Button } from "@/components/ui/button";
-import { getCategories, InsertProducts, uploadImageToServer } from "@/lib/data/product";
+import {
+  getCategories,
+  InsertProducts,
+  uploadImageToServer,
+} from "@/lib/data/product";
 import { Category, ProductRequest } from "@/lib/type/product-response";
+import { toast, ToastContainer } from "react-toastify";
 
 const formSchema = z.object({
-    title: z.string(),
-    price: z.preprocess(
-      (v) => Number(v),
-      z.number().positive({ message: "Price must be a positive number" }),
-    ),
-    description: z.string().optional().default(""),
-    categoryId: z.preprocess(
-      (v) => Number(v),
-      z.number().int().positive("Category is required"),
-    ),
-    images: z
-      .custom<FileList | null>()
-      .refine((files) => files && files.length > 0, "Please choose an image"),
+  title: z.string(),
+  price: z.preprocess(
+    (v) => Number(v),
+    z.number().positive({ message: "Price must be a positive number" }),
+  ),
+  description: z.string().optional().default(""),
+  categoryId: z.preprocess(
+    (v) => Number(v),
+    z.number().int().positive("Category is required"),
+  ),
+  images: z
+    .custom<FileList | null>()
+    .refine((files) => files && files.length > 0, "Please choose an image"),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -79,7 +83,7 @@ export default function ProductForm() {
 
       // 1) upload all selected images → get URLs
       const uploaded = await Promise.all(
-        filesArray.map((f) => uploadImageToServer(f))
+        filesArray.map((f) => uploadImageToServer(f)),
       );
       const imageUrls = uploaded.map((u) => u.location);
 
@@ -92,13 +96,13 @@ export default function ProductForm() {
         images: imageUrls,
       };
       const created = await InsertProducts(payload);
+      toast.success("Product created successfully")
       console.log("Created product:", created);
-      alert(JSON.stringify(created, null, 2));
       form.reset();
       setFileInputKey((current) => current + 1);
-    } 
-    catch (err) {
+    } catch (err) {
       console.error(err);
+      toast.error("Failed to create product !!");
     }
   }
 
@@ -116,10 +120,6 @@ export default function ProductForm() {
       className="space-y-8 @container"
     >
       <div className="grid grid-cols-12 gap-4">
-        <div key="text-0" id="text-0" className=" col-span-12 col-start-auto">
-          <p className="not-first:mt-6">Product Form</p>
-        </div>
-
         <Controller
           control={form.control}
           name="title"
@@ -132,7 +132,7 @@ export default function ProductForm() {
 
               <Input
                 key="title"
-                placeholder="Macbook pro M4"
+                placeholder="Product Name"
                 type="text"
                 className=""
                 {...field}
@@ -308,7 +308,8 @@ export default function ProductForm() {
           </Button>
         </Field>
       </div>
-      
+     
     </form>
+    
   );
 }

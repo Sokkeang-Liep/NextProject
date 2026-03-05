@@ -32,25 +32,18 @@ export async function InsertProducts(product: ProductRequest){
   return respsonse;
 }
  
+
 // Insert Images to server
 export async function uploadImageToServer(file: File): Promise<UploadResponse> {
-  if (!baseAPI) throw new Error("NEXT_PUBLIC_API_URL is missing");
-
   const formData = new FormData();
-  // IMPORTANT: the API expects the field name "file"
   formData.append("file", file);
 
-  const res = await fetch(`${baseAPI}/api/v1/files/upload`, {
+  const data = await fetch(`${baseAPI}/api/v1/files/upload`, {
     method: "POST",
     body: formData,
-    // DO NOT set "Content-Type" manually for FormData
   });
-
-  if (!res.ok) {
-    const text = await res.text();
-    throw new Error(`Upload failed: ${res.status} ${text}`);
-  }
-  return res.json();
+  const response = await data.json();
+  return response;
 }
 
 

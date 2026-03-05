@@ -5,6 +5,7 @@ import ProductLoading from "./products/loading";
 import { Suspense } from "react";
 import { ThemeProvider } from "@/components/theme-provider";
 import { ModeToggle } from "@/components/mode-toggle";
+import Link from "next/link";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,7 +32,42 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <nav>Navbar Shared</nav>
+           {/* Navbar */}
+      <nav className="bg-pink-100 shadow-md sticky top-0 z-50">
+        <div className="container mx-auto flex justify-between items-center py-4 px-6">
+         <img
+  src="https://www.shoprhyme.com/wp-content/uploads/2022/10/shoprhyme-LOGO-without-tagline.png"
+  alt="XTShop Logo"
+  className="h-9 flex items-center"
+/>
+          <ul className="flex space-x-6 text-gray-700 font-medium">
+            <li>
+              <Link
+                href="/products"
+                className="hover:text-indigo-600 transition-colors font-bold text-orange-400"
+              >
+                Products
+              </Link>
+            </li>
+            <li>
+              <Link
+                href="/users"
+                className="hover:text-indigo-600 transition-colors font-bold text-orange-400"
+              >
+                Users
+              </Link>
+            </li>
+             <li>
+              <Link
+                href="/products/create-product"
+                className="hover:text-indigo-600 transition-colors font-bold text-orange-400"
+              >
+                Add Product
+              </Link>
+            </li>
+          </ul>
+        </div>
+      </nav>
           <ThemeProvider
             attribute="class"
             defaultTheme="system"

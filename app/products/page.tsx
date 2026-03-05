@@ -1,3 +1,4 @@
+import ProductForm from '@/components/forms/product-form';
 import { ProductCard } from '@/components/i-tech-card/product-card'
 import { ProductResponse } from '@/lib/type/products';
 import { basename } from 'path';
@@ -18,7 +19,7 @@ export default async  function ProductPage(){
     // 1way to fectch data
     // const products = await loadProduct()
 
-    // 2way to fectch data
+    // // 2way to fectch data
     const response = await fetch(`${BASE_URL}/api/v1/products`)
     const products: ProductResponse[] = await response.json();
 
@@ -40,5 +41,13 @@ export default async  function ProductPage(){
                 
             </section>
         </main>
+
+
+
+
+        //  <div className="container w-100 mx-auto">
+        //               <ProductForm/>
+        //           </div>
+
     )
 }
