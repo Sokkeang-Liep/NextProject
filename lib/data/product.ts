@@ -29,9 +29,10 @@ export async function InsertProducts(product: ProductRequest){
     body: JSON.stringify(product)  //this is convert to JOSON 
   })
   const respsonse = data.json()  
-  return respsonse;
+  return { status: data.status, data };
 }
  
+
 
 // Insert Images to server
 export async function uploadImageToServer(file: File): Promise<UploadResponse> {
@@ -42,7 +43,14 @@ export async function uploadImageToServer(file: File): Promise<UploadResponse> {
     method: "POST",
     body: formData,
   });
+
   const response = await data.json();
+
+  // ✅ check if upload failed
+  if (!data.ok) {
+    throw new Error(response.message || "Image upload failed");
+  }
+
   return response;
 }
 

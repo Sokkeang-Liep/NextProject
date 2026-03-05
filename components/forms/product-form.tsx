@@ -77,7 +77,7 @@ export default function ProductForm() {
   });
 
   async function onSubmit(values: FormValues) {
-    try {
+    
       const files = values.images!;
       const filesArray = Array.from(files);
 
@@ -95,21 +95,24 @@ export default function ProductForm() {
         categoryId: values.categoryId,
         images: imageUrls,
       };
+      
+      
+      try{
       const created = await InsertProducts(payload);
-      toast.success("Product created successfully")
-      console.log("Created product:", created);
-      form.reset();
-      setFileInputKey((current) => current + 1);
-    } catch (err) {
-      console.error(err);
-      toast.error("Failed to create product !!");
+      console.log(created.status)
+      if(created.status==201){
+        toast.success("Product Inserted Successfully ✅")
+      }else{
+        toast.error("Failed to Insert Product ❌")
+      }
+    }catch(error){
+      toast.error("Something went wrong, Please try again  ⚠️")
     }
   }
-
+  
   function onReset() {
     form.reset();
     form.clearErrors();
-    setFileInputKey((current) => current + 1);
   }
 
   return (
